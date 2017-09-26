@@ -16,6 +16,7 @@ namespace Xero.Web.Api.Models
         #region Properties
         public Guid Id { get; set; }
 
+        [JsonIgnore]
         public Guid ProductId { get; set; }
 
         public string Name { get; set; }

@@ -183,7 +183,10 @@ namespace Xero.Web.Api.Controllers
 
                 // check if flag IsNew
                 if (option.IsNew)
-                    ctx.ProductOptions.Add(TinyMapper.Map<Xero.Persistence.ProductOption>(option));
+                {
+                    option.ProductId = productId;
+                    ctx.ProductOptions.Add(TinyMapper.Map<Persistence.ProductOption>(option));
+                }
                 else
                     await UpdateOption(option.Id, option);
 
@@ -197,13 +200,7 @@ namespace Xero.Web.Api.Controllers
         {
             using (var ctx = new ProductsContext())
             {
-                var prod = await ctx.Products.FirstOrDefaultAsync(p => p.Id == id);
-
-                // check if product exists before attempt to update option
-                if (prod == null)
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-
-                var opt = await ctx.ProductOptions.FirstOrDefaultAsync(o => o.Id == option.Id);
+                var opt = await ctx.ProductOptions.FirstOrDefaultAsync(o => o.Id == id);
 
                 // check if option exists before attempt to update
                 if (opt == null)
