@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Threading.Tasks;
 using Xero.Persistence;
 
@@ -21,6 +22,11 @@ namespace Xero.Web.Api.Tests.DbTestHelpers
         public Task<int> SaveChangesAsync()
         {
             return Task.FromResult(SaveChanges());
+        }
+
+        public DbEntityEntry Entry(object entity)
+        {
+            return default(DbEntityEntry);
         }
 
         public int SaveChanges()

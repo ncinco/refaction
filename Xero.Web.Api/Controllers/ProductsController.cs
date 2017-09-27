@@ -218,6 +218,11 @@ namespace Xero.Web.Api.Controllers
             if (prod == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
+            // hack for unit test
+            var entry = _productsContext.Entry(opt);
+            if(entry != null)
+                entry.State = EntityState.Deleted;
+
             // save
             prod.ProductOptions.Remove(opt);
             await _productsContext.SaveChangesAsync();
