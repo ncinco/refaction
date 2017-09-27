@@ -5,14 +5,6 @@ namespace Xero.Web.Api.Models
 {
     public class ProductOption
     {
-        #region Constructors
-        public ProductOption()
-        {
-            Id = Guid.NewGuid();
-            IsNew = true;
-        }
-        #endregion
-
         #region Properties
         public Guid Id { get; set; }
 
@@ -22,9 +14,6 @@ namespace Xero.Web.Api.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
-
-        [JsonIgnore]
-        public bool IsNew { get; }
         #endregion
     }
 }

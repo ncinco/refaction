@@ -1,18 +1,9 @@
 using System;
-using Newtonsoft.Json;
 
 namespace Xero.Web.Api.Models
 {
     public class Product
     {
-        #region Constructors
-        public Product()
-        {
-            Id = Guid.NewGuid();
-            IsNew = true;
-        }
-        #endregion
-
         #region Properties
         public Guid Id { get; set; }
 
@@ -23,9 +14,6 @@ namespace Xero.Web.Api.Models
         public decimal Price { get; set; }
 
         public decimal DeliveryPrice { get; set; }
-        
-        [JsonIgnore]
-        public bool IsNew { get; }
         #endregion
     }
 }

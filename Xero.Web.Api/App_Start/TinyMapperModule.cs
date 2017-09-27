@@ -9,8 +9,12 @@ namespace Xero.Web.Api
     {
         public override void Load()
         {
-            TinyMapper.Bind<Product, Persistence.Product>();
-            TinyMapper.Bind<ProductOption, Persistence.ProductOption>();
+            TinyMapper.Bind<Product, Persistence.Product>(config => config.Ignore(x => x.Id));
+            TinyMapper.Bind<ProductOption, Persistence.ProductOption>(config =>
+            {
+                config.Ignore(x => x.Id);
+                config.Ignore(x => x.ProductId);
+            });
 
             TinyMapper.Bind<Persistence.Product, Product>();
             TinyMapper.Bind<Persistence.ProductOption, ProductOption>();

@@ -80,12 +80,7 @@ namespace Xero.Web.Api.Controllers
         [HttpPost]
         public async Task Create(Product product)
         {
-            // check if flag IsNew
-            if (product.IsNew)
-                _productsContext.Products.Add(TinyMapper.Map<Xero.Persistence.Product>(product));
-            else
-                await Update(product.Id, product);
-
+            _productsContext.Products.Add(TinyMapper.Map<Persistence.Product>(product));
             await _productsContext.SaveChangesAsync();
         }
 
@@ -114,7 +109,13 @@ namespace Xero.Web.Api.Controllers
             if (prod == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
+            var options = await _productsContext.ProductOptions.Where(o => o.ProductId == id).ToListAsync();
+
+            // remove options
+            _productsContext.ProductOptions.RemoveRange(options);
+            // remove product
             _productsContext.Products.Remove(prod);
+
             await _productsContext.SaveChangesAsync();
         }
 
@@ -163,15 +164,9 @@ namespace Xero.Web.Api.Controllers
             // check if product exists before attempt to add new option
             if (prod == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            // check if flag IsNew
-            if (option.IsNew)
-            {
-                option.ProductId = productId;
-                _productsContext.ProductOptions.Add(TinyMapper.Map<Persistence.ProductOption>(option));
-            }
-            else
-                await UpdateOption(option.Id, option);
+            
+            option.ProductId = productId;
+            _productsContext.ProductOptions.Add(TinyMapper.Map<Persistence.ProductOption>(option));
 
             await _productsContext.SaveChangesAsync();
         }
