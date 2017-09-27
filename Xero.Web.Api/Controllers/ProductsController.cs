@@ -80,7 +80,9 @@ namespace Xero.Web.Api.Controllers
         [HttpPost]
         public async Task Create(Product product)
         {
-            _productsContext.Products.Add(TinyMapper.Map<Persistence.Product>(product));
+            var newProduct = TinyMapper.Map<Persistence.Product>(product);
+            newProduct.Id = Guid.NewGuid();
+            _productsContext.Products.Add(newProduct);
             await _productsContext.SaveChangesAsync();
         }
 
@@ -127,9 +129,13 @@ namespace Xero.Web.Api.Controllers
         {
             var options = new ProductOptions();
 
-            var opt = await _productsContext.ProductOptions
-                .Where(p => p.ProductId == productId)
-                .ToListAsync();
+            var product = await _productsContext.Products.FirstOrDefaultAsync(p => p.Id == productId);
+
+            if (product == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var opt = product.ProductOptions
+                .Where(p => p.ProductId == productId).ToList();
 
             // throw if not options found
             if (!opt.Any())
@@ -147,9 +153,14 @@ namespace Xero.Web.Api.Controllers
         [HttpGet]
         public async Task<ProductOption> GetOption(Guid productId, Guid id)
         {
+            var product = await _productsContext.Products.FirstOrDefaultAsync(p => p.Id == productId);
+
+            if (product == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
             // check product Id and option Id
-            var opt = await _productsContext.ProductOptions
-                .FirstOrDefaultAsync(p => p.ProductId == productId && p.Id == id);
+            var opt = product.ProductOptions
+                .FirstOrDefault(p => p.Id == id);
 
             if (opt == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -167,8 +178,9 @@ namespace Xero.Web.Api.Controllers
             if (prod == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             
-            option.ProductId = productId;
-            _productsContext.ProductOptions.Add(TinyMapper.Map<Persistence.ProductOption>(option));
+            var newOption = TinyMapper.Map<Persistence.ProductOption>(option);
+            newOption.Id = Guid.NewGuid();
+            prod.ProductOptions.Add(newOption);
 
             await _productsContext.SaveChangesAsync();
         }
@@ -200,8 +212,14 @@ namespace Xero.Web.Api.Controllers
             if (opt == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
+            var prod = await _productsContext.Products.FirstOrDefaultAsync(p => p.Id == opt.ProductId);
+
+            // check if product exists before attempt to add new option
+            if (prod == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
             // save
-            _productsContext.ProductOptions.Remove(opt);
+            prod.ProductOptions.Remove(opt);
             await _productsContext.SaveChangesAsync();
         }
     }

@@ -58,6 +58,8 @@ namespace Xero.Web.Api.Tests
             ProductContext.Products.Add(product);
             ProductContext.ProductOptions.Add(option1);
             ProductContext.ProductOptions.Add(option2);
+            product.ProductOptions.Add(option1);
+            product.ProductOptions.Add(option2);
 
 
             product = new Persistence.Product
@@ -87,6 +89,8 @@ namespace Xero.Web.Api.Tests
             ProductContext.Products.Add(product);
             ProductContext.ProductOptions.Add(option1);
             ProductContext.ProductOptions.Add(option2);
+            product.ProductOptions.Add(option1);
+            product.ProductOptions.Add(option2);
         }
 
         [TestMethod]
@@ -140,7 +144,6 @@ namespace Xero.Web.Api.Tests
         {
             var newProduct = new Product
             {
-                Id = Guid.NewGuid(),
                 Name = "Name",
                 Description = "Description",
                 Price = 1000,
@@ -148,10 +151,10 @@ namespace Xero.Web.Api.Tests
             };
 
             await ProductsController.Create(newProduct);
-            var dbProduct = await ProductsController.GetProduct(newProduct.Id);
+            var dbProducts = await ProductsController.SearchByName(newProduct.Name);
+            var dbProduct = dbProducts.Items[0];
 
             Assert.IsNotNull(dbProduct);
-            Assert.AreEqual(newProduct.Id, dbProduct.Id);
             Assert.AreEqual(newProduct.Name, dbProduct.Name);
             Assert.AreEqual(newProduct.Description, dbProduct.Description);
             Assert.AreEqual(newProduct.Price, dbProduct.Price);
