@@ -112,7 +112,11 @@ namespace Xero.Web.Api.Controllers
             var options = await _productsContext.ProductOptions.Where(o => o.ProductId == id).ToListAsync();
 
             // remove options
-            _productsContext.ProductOptions.RemoveRange(options);
+            options.ForEach(opt =>
+            {
+                _productsContext.ProductOptions.Remove(opt);
+            });
+            
             // remove product
             _productsContext.Products.Remove(prod);
 
