@@ -62,7 +62,7 @@ namespace Xero.Web.Api.Controllers
             return products;
         }
 
-        [Route("{id}")]
+        [Route("{id:guid}")]
         [HttpGet]
         public async Task<Product> GetProduct(Guid id)
         {
@@ -84,7 +84,7 @@ namespace Xero.Web.Api.Controllers
             await _productsContext.SaveChangesAsync();
         }
 
-        [Route("{id}")]
+        [Route("{id:guid}")]
         [HttpPut]
         public async Task Update(Guid id, Product product)
         {
@@ -100,7 +100,7 @@ namespace Xero.Web.Api.Controllers
             await _productsContext.SaveChangesAsync();
         }
 
-        [Route("{id}")]
+        [Route("{id:guid}")]
         [HttpDelete]
         public async Task Delete(Guid id)
         {
@@ -109,10 +109,8 @@ namespace Xero.Web.Api.Controllers
             if (prod == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var options = await _productsContext.ProductOptions.Where(o => o.ProductId == id).ToListAsync();
-
             // remove options
-            options.ForEach(opt =>
+            prod.ProductOptions.ToList().ForEach(opt =>
             {
                 _productsContext.ProductOptions.Remove(opt);
             });
@@ -123,7 +121,7 @@ namespace Xero.Web.Api.Controllers
             await _productsContext.SaveChangesAsync();
         }
 
-        [Route("{productId}/options")]
+        [Route("{productId:guid}/options")]
         [HttpGet]
         public async Task<ProductOptions> GetOptions(Guid productId)
         {
@@ -145,7 +143,7 @@ namespace Xero.Web.Api.Controllers
             return options;
         }
 
-        [Route("{productId}/options/{id}")]
+        [Route("{productId:guid}/options/{id:guid}")]
         [HttpGet]
         public async Task<ProductOption> GetOption(Guid productId, Guid id)
         {
@@ -159,7 +157,7 @@ namespace Xero.Web.Api.Controllers
             return TinyMapper.Map<ProductOption>(opt);
         }
 
-        [Route("{productId}/options")]
+        [Route("{productId:guid}/options")]
         [HttpPost]
         public async Task CreateOption(Guid productId, ProductOption option)
         {
@@ -175,7 +173,7 @@ namespace Xero.Web.Api.Controllers
             await _productsContext.SaveChangesAsync();
         }
 
-        [Route("{productId}/options/{id}")]
+        [Route("{productId:guid}/options/{id:guid}")]
         [HttpPut]
         public async Task UpdateOption(Guid id, ProductOption option)
         {
@@ -192,7 +190,7 @@ namespace Xero.Web.Api.Controllers
             await _productsContext.SaveChangesAsync();
         }
 
-        [Route("{productId}/options/{id}")]
+        [Route("{productId:guid}/options/{id:guid}")]
         [HttpDelete]
         public async Task DeleteOption(Guid id)
         {
