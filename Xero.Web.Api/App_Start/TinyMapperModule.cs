@@ -1,17 +1,19 @@
 ﻿using Nelibur.ObjectMapper;
-using Xero.Web.Api.Models;
+using Ninject.Modules;
+using Product = Xero.Web.Api.Models.Product;
+using ProductOption = Xero.Web.Api.Models.ProductOption;
 
 namespace Xero.Web.Api
 {
-    public class TinyMapperModule : Ninject.Modules.NinjectModule
+    public class TinyMapperModule : NinjectModule
     {
         public override void Load()
         {
-            TinyMapper.Bind<Product, Xero.Persistence.Product>();
-            TinyMapper.Bind<ProductOption, Xero.Persistence.ProductOption>();
+            TinyMapper.Bind<Product, Persistence.Product>();
+            TinyMapper.Bind<ProductOption, Persistence.ProductOption>();
 
-            TinyMapper.Bind<Xero.Persistence.Product, Product>();
-            TinyMapper.Bind<Xero.Persistence.ProductOption, ProductOption>();
+            TinyMapper.Bind<Persistence.Product, Product>();
+            TinyMapper.Bind<Persistence.ProductOption, ProductOption>();
         }
     }
 }

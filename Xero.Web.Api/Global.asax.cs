@@ -1,10 +1,15 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Collections;
+using System.Web;
+using System.Web.Http;
 using Ninject;
 using Ninject.Modules;
+using Ninject.Web.Common;
+using Xero.Persistence;
 
 namespace Xero.Web.Api
 {
-    public class WebApiApplication : Ninject.Web.Common.NinjectHttpApplication
+    public class WebApiApplication : NinjectHttpApplication
     {
         protected override void OnApplicationStarted()
         {
@@ -17,10 +22,20 @@ namespace Xero.Web.Api
         {
             var modules = new INinjectModule[]
             {
+                new PersistenceModule(),
                 new TinyMapperModule()
             };
 
-            return new StandardKernel(modules);
+            var kernel = new StandardKernel();
+
+            kernel.Load(modules);
+
+            kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+            kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+            // register the dependency resolver passing the kernel container
+            GlobalConfiguration.Configuration.DependencyResolver = new NinjectDependencyResolver(kernel);
+
+            return new StandardKernel();
         }
     }
 }

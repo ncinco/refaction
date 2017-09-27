@@ -13,7 +13,7 @@ namespace Xero.Persistence
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class ProductsContext : DbContext
+    public partial class ProductsContext : DbContext, IProductsContext
     {
         public ProductsContext()
             : base("name=ProductsContext")

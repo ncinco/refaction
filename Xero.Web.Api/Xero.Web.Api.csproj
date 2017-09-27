@@ -112,6 +112,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\PersistenceModule.cs" />
     <Compile Include="App_Start\TinyMapperModule.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
@@ -122,6 +123,8 @@
     <Compile Include="Models\ProductOption.cs" />
     <Compile Include="Models\ProductOptions.cs" />
     <Compile Include="Models\Products.cs" />
+    <Compile Include="App_Start\NinjectDependencyResolver.cs" />
+    <Compile Include="App_Start\NinjectDependencyScope.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
