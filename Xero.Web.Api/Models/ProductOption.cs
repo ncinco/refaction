@@ -6,7 +6,7 @@ namespace Xero.Web.Api.Models
     public class ProductOption
     {
         #region Properties
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [JsonIgnore]
         public Guid ProductId { get; set; }
