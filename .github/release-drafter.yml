@@ -1,0 +1,14 @@
+
+# Config for https://github.com/apps/release-drafter
+template: |
+  ## What's Changed
+  $CHANGES
+  $CONTRIBUTORS	
+  
+  $PREVIOUS_TAG
+  
+  $NUMBER
+  
+  $TITLE
+  
+  $AUTHOR
